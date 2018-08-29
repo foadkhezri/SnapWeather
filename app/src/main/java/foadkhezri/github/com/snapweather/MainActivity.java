@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         background = findViewById(R.id.background);
         Glide
                 .with(MainActivity.this)
-                .load("https://images.unsplash.com/photo-1533293622232-d5074edb980f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=5f9646aec313cc903a3be048f426d663&auto=format&fit=crop&w=1868&q=80")
+                .load(R.drawable.background)
                 .into(background);
     }
 
@@ -85,12 +85,15 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONObject jsonObject = new JSONObject(s);
-                String weatherInfo = jsonObject.getString("weather");
+                JSONObject weatherObject = jsonObject.getJSONObject("main");
+                Double temp = weatherObject.getDouble("temp");
+                result.setText(String.format("%s °C", String.valueOf(temp)));
+                /*String weatherInfo = jsonObject.getString("weather");
                 JSONArray arr = new JSONArray(weatherInfo);
                 for (int i = 0; i < arr.length(); i ++) {
                     JSONObject jsonPart = arr.getJSONObject(i);
                     result.setText(String.format("%s", jsonPart.getString("description")));
-                }
+                }*/
             } catch (JSONException e) {
                 toast = Toast.makeText(MainActivity.this, "connection error", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             if (!cityName.getText().toString().equals("")) {
                 name = String.valueOf(cityName.getText());
                 DownloadWeather task = new DownloadWeather();
-                task.execute("http://api.openweathermap.org/data/2.5/weather?q=" + cityName.getText().toString() + "&appid=218c95cc487f6c2f298a50ab75e4cef1");
+                task.execute("http://api.openweathermap.org/data/2.5/weather?q=" + cityName.getText().toString() + "&units=metric&appid=f30a96601ddb7a6017f838f99199b4c0");
                 InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 assert mgr != null;
                 mgr.hideSoftInputFromWindow(cityName.getWindowToken(), 0);
